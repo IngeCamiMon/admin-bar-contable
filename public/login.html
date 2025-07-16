@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar Sesión</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .login-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    input, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>Login</h2>
+  <form id="formLogin">
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Contraseña" required />
+    <button type="submit">Ingresar</button>
+  </form>
+</div>
+
+<script type="module">
+  import { auth } from './scripts/firebase-config.js';
+  import {
+    signInWithEmailAndPassword
+  } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+
+  const form = document.getElementById('formLogin');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = form.email.value;
+    const password = form.password.value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      location.href = 'dashboard.html';
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  });
+</script>
+
+</body>
+</html>

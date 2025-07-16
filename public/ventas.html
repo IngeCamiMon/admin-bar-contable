@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registro de Ventas</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+
+    <h2>Ventas por Mesa</h2>
+    <button id="btnAgregarMesa">➕ Agregar Mesa</button>
+
+    <div id="mesasContainer" style="margin-top: 20px"></div>
+
+    <div id="detalleVenta" style="display: none; margin-top: 20px">
+      <h3>Venta - Mesa <span id="mesaSeleccionada"></span></h3>
+
+      <div class="form-container">
+        <form id="formVenta">
+          <select id="productoSelect" required></select>
+          <input type="number" id="cantidadProducto" placeholder="Cantidad" min="1" value="1" required />
+          <button type="submit">Agregar Producto</button>
+        </form>
+      </div>
+
+      <table border="1" id="tablaDetalle">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <p>
+        <strong>Total: $<span id="totalVenta">0.00</span></strong>
+      </p>
+      <button id="btnFinalizarVenta">Finalizar y Pagar</button>
+      <button id="btnCancelarVenta" style="background-color: red; color: white">Cancelar Venta</button>
+    </div>
+
+    <script type="module" src="scripts/ventas.js"></script>
+  </body>
+</html>

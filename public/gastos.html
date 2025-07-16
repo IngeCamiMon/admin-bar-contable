@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gastos Operativos</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+
+    <h2 class="text-center">Registro de Gastos</h2>
+    <div class="text-center"></div>
+
+    <div class="form-container">
+      <form id="formGasto">
+        <label for="descripcion">Descripción</label>
+        <input type="text" id="descripcion" placeholder="Descripción" required />
+
+        <label for="valor">Valor</label>
+        <input type="number" id="valor" placeholder="Valor" min="0" step="0.01" required />
+
+        <label for="fecha">Fecha</label>
+        <input type="date" id="fecha" required />
+
+        <label for="categoria">Categoría</label>
+        <select id="categoria" required>
+          <option value="">Seleccione categoría</option>
+          <option value="Compras">Compras</option>
+          <option value="Servicios">Servicios</option>
+          <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Otros">Otros</option>
+        </select>
+
+        <button type="submit">Registrar gasto</button>
+      </form>
+    </div>
+
+    <h3 class="mt-4">Gastos recientes</h3>
+    <div class="table-wrapper">
+      <table id="tablaGastos">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Descripción</th>
+            <th>Categoría</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script type="module" src="scripts/gastos.js"></script>
+  </body>
+</html>

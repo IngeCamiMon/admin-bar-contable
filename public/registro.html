@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Usuarios</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h2>Registrar Usuario</h2>
+
+  <div class="form-container">
+    <form id="formRegistro">
+      <input type="email" id="email" placeholder="Correo electrónico" required />
+      <input type="password" id="password" placeholder="Contraseña" required />
+      <select id="rol" required>
+        <option value="" disabled selected>Seleccionar rol</option>
+        <option value="admin">Administrador</option>
+        <option value="cajero">Cajero</option>
+        <option value="mesero">Mesero</option>
+      </select>
+      <button type="submit">Registrar</button>
+      <button type="button" onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './scripts/firebase-config.js';
+    import {
+      createUserWithEmailAndPassword
+    } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+    import {
+      doc, setDoc
+    } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+
+    const form = document.getElementById('formRegistro');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = form.email.value;
+      const password = form.password.value;
+      const rol = form.rol.value;
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+        // Guardar en Firestore
+        await setDoc(doc(db, 'usuarios', cred.user.uid), {
+          email,
+          rol
+        });
+
+        alert('Usuario registrado exitosamente');
+        form.reset();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
+  </script>
+
+</body>
+</html>

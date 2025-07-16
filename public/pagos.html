@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registro de Pagos</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+
+    <h2>Registro de Pagos</h2>
+
+    <div class="form-container">
+      <form id="formPago">
+        <input type="text" id="beneficiario" placeholder="Beneficiario" required />
+        <input type="number" id="monto" placeholder="Monto" required min="0" />
+        <select id="categoria" required>
+          <option value="">Seleccione Categoría</option>
+          <option value="Proveedor">Proveedor</option>
+          <option value="Empleado">Empleado</option>
+          <option value="Servicios">Servicios</option>
+        </select>
+        <input type="date" id="fechaPago" required />
+        <input type="file" id="soporte" />
+        <textarea id="referencia" placeholder="Referencia o Descripción"></textarea>
+        <select id="estadoPago" required>
+          <option value="pendiente">Pendiente</option>
+          <option value="pagado">Pagado</option>
+          <option value="programado">Programado</option>
+        </select>
+        <button type="submit">Registrar Pago</button>
+      </form>
+    </div>
+
+    <h3>Historial de Pagos</h3>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Beneficiario</th>
+          <th>Monto</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Referencia</th>
+        </tr>
+      </thead>
+      <tbody id="tablaPagos">
+        <!-- Se cargarán los pagos -->
+      </tbody>
+    </table>
+
+    <script type="module" src="scripts/pagos.js"></script>
+  </body>
+</html>

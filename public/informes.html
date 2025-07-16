@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Informes Generales</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+      .contenedor-informes {
+        max-width: 900px;
+        margin: 30px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      }
+      h2,
+      h3 {
+        text-align: center;
+      }
+      .form-container {
+        margin-bottom: 20px;
+      }
+      .form-container form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        font-weight: bold;
+      }
+      button {
+        padding: 10px 15px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+      th,
+      td {
+        padding: 8px;
+        border: 1px solid #ccc;
+        text-align: left;
+      }
+      #chart-container {
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+
+    <div class="contenedor-informes">
+      <h2>Generar Informes</h2>
+      <div class="text-center"></div>
+
+      <div class="form-container">
+        <form id="formInforme">
+          <label for="fechaInicio"
+            >Desde:
+            <input type="date" id="fechaInicio" required />
+          </label>
+          <label for="fechaFin"
+            >Hasta:
+            <input type="date" id="fechaFin" required />
+          </label>
+          <label for="tipoInforme"
+            >Tipo de informe:
+            <select id="tipoInforme">
+              <option value="general">General</option>
+              <option value="producto">Ventas por Producto</option>
+              <option value="categoria">Ventas por Categoría</option>
+            </select>
+          </label>
+          <label for="filtroProducto"
+            >Filtrar por Producto:
+            <select id="filtroProducto"></select>
+          </label>
+          <label for="filtroCategoria"
+            >Filtrar por Categoría:
+            <select id="filtroCategoria"></select>
+          </label>
+          <button type="submit">Generar</button>
+        </form>
+      </div>
+
+      <div id="resultados">
+        <h3>Resumen</h3>
+        <p>Ventas: $<span id="ventasTotal">0.00</span></p>
+        <p>Gastos: $<span id="gastosTotal">0.00</span></p>
+        <p>
+          <strong>Utilidad: $<span id="utilidad">0.00</span></strong>
+        </p>
+
+        <div id="detalleInforme"></div>
+      </div>
+
+      <div id="chart-container">
+        <h3>Visualización Gráfica</h3>
+        <canvas id="grafico"></canvas>
+      </div>
+
+      <div style="margin-top: 20px">
+        <button id="btnExportarPDF">Exportar PDF</button>
+        <button id="btnExportarExcel">Exportar Excel</button>
+      </div>
+    </div>
+
+    <script type="module" src="scripts/informes.js"></script>
+  </body>
+</html>

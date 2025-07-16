@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Principal</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #2c3e50;
+      color: white;
+      padding-top: 20px;
+      position: fixed;
+      height: 100%;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 20px;
+    }
+
+    .sidebar a,
+    #logout {
+      display: block;
+      padding: 15px 20px;
+      text-decoration: none;
+      color: #ecf0f1;
+      font-weight: 500;
+      transition: background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sidebar a:hover,
+    #logout:hover {
+      background-color: #34495e;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+      flex-grow: 1;
+    }
+
+    .dashboard {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .modulos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .modulo {
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .modulo:hover {
+      background: #0056b3;
+    }
+
+    #bienvenida {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Admin Bar</h2>
+    <a href="dashboard.html">Inicio</a>
+    <div id="sidebarLinks"></div>
+    <span id="logout">Cerrar sesión</span>
+  </div>
+
+  <div class="main-content">
+    <div class="dashboard">
+      <h2>Panel Principal</h2>
+      <p id="bienvenida"></p>
+      <div class="modulos" id="modulosContainer"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './scripts/firebase-config.js';
+    import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+
+    const modulosContainer = document.getElementById('modulosContainer');
+    const sidebarLinks = document.getElementById('sidebarLinks');
+    const bienvenida = document.getElementById('bienvenida');
+
+    const modulosPorRol = {
+      admin: [
+        { nombre: "Facturación", link: "facturacion.html" },
+        { nombre: "Inventario", link: "inventario.html" },
+        { nombre: "Ventas", link: "ventas.html" },
+        { nombre: "Gastos", link: "gastos.html" },
+        { nombre: "Pagos", link: "pagos.html" },
+        { nombre: "Caja / Cierre", link: "caja.html" },
+        { nombre: "Informes", link: "informes.html" },
+        { nombre: "Usuarios", link: "registro.html" }
+      ],
+      cajero: [
+        { nombre: "Facturación", link: "facturacion.html" },
+        { nombre: "Ventas", link: "ventas.html" },
+        { nombre: "Caja / Cierre", link: "caja.html" }
+      ],
+      mesero: [
+        { nombre: "Ventas", link: "ventas.html" }
+      ]
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        location.href = "login.html";
+        return;
+      }
+
+      const docRef = doc(db, "usuarios", user.uid);
+      const snap = await getDoc(docRef);
+      const data = snap.data();
+      const rol = data?.rol || "desconocido";
+
+      bienvenida.textContent = `Bienvenido, ${data.email} | Rol: ${rol}`;
+
+      const modulos = modulosPorRol[rol] || [];
+      modulos.forEach(mod => {
+        // Módulo en dashboard
+        const a = document.createElement('a');
+        a.className = 'modulo';
+        a.href = mod.link;
+        a.textContent = mod.nombre;
+        modulosContainer.appendChild(a);
+
+        // Módulo en sidebar
+        const s = document.createElement('a');
+        s.href = mod.link;
+        s.textContent = mod.nombre;
+        sidebarLinks.appendChild(s);
+      });
+    });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      signOut(auth).then(() => location.href = "login.html");
+    });
+  </script>
+
+</body>
+</html>

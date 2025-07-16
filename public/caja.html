@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Caja y Cierre Diario</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+  <h2>Cierre de Caja Diario</h2>
+  
+
+
+  <button id="btnCalcular">Calcular Totales de Hoy</button>
+
+  <div id="resumen" style="margin-top: 20px;">
+    <p>Ventas del día: $<span id="ventasDia">0.00</span></p>
+    <p>Gastos del día: $<span id="gastosDia">0.00</span></p>
+    <p><strong>Total Neto: $<span id="totalNeto">0.00</span></strong></p>
+  </div>
+
+  <h3>Registrar ingreso o egreso manual</h3>
+  <form id="formMovimiento">
+    <input type="text" id="concepto" placeholder="Concepto" required />
+    <input type="number" id="monto" placeholder="Monto" step="0.01" required />
+    <select id="tipo" required>
+      <option value="ingreso">Ingreso</option>
+      <option value="egreso">Egreso</option>
+    </select>
+    <button type="submit">Registrar</button>
+  </form>
+
+  <h3>Cierre del Día</h3>
+  <button id="btnCerrarCaja">Cerrar Caja</button>
+
+  <script type="module" src="scripts/caja.js"></script>
+</body>
+</html>

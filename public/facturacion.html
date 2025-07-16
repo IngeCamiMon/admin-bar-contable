@@ -1,0 +1,33 @@
+<!-- public/facturacion.html -->
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Facturación</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+
+    <h2 class="text-center">Facturación</h2>
+    <div class="text-center"></div>
+
+    <div class="form-container">
+      <form id="facturaForm">
+        <label for="cliente">Cliente o Mesa</label>
+        <input type="text" id="cliente" placeholder="Nombre del cliente o mesa" required />
+
+        <div id="productosContainer">
+          <!-- Aquí se agregarán productos dinámicamente -->
+        </div>
+
+        <button type="button" id="agregarProducto">Agregar Producto</button>
+        <button type="submit">Generar Factura</button>
+      </form>
+    </div>
+
+    <div id="facturaPOS" style="display: none; margin-top: 20px"></div>
+
+    <script type="module" src="scripts/facturacion.js"></script>
+  </body>
+</html>
