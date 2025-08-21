@@ -1,125 +1,251 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Informes Generales</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <style>
-      .contenedor-informes {
-        max-width: 900px;
-        margin: 30px auto;
-        background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-      }
-      h2,
-      h3 {
-        text-align: center;
-      }
-      .form-container {
-        margin-bottom: 20px;
-      }
-      .form-container form {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-      }
-      label {
-        display: flex;
-        flex-direction: column;
-        font-weight: bold;
-      }
-      button {
-        padding: 10px 15px;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-      button:hover {
-        background: #0056b3;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-      }
-      th,
-      td {
-        padding: 8px;
-        border: 1px solid #ccc;
-        text-align: left;
-      }
-      #chart-container {
-        margin-top: 30px;
-      }
-    </style>
-  </head>
-  <body>
-    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
-
+<head>
+  <meta charset="UTF-8" />
+  <title>📊 Informe General - Sistema Contable</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Sistema de informes financieros - Análisis de ventas, gastos y utilidades">
+  
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css" />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📊</text></svg>">
+  
+  <!-- Meta tags para PWA -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+  <!-- Contenedor principal -->
+  <div class="main-content">
     <div class="contenedor-informes">
-      <h2>Generar Informes</h2>
-      <div class="text-center"></div>
+      <!-- Header -->
+      <header class="header-informe">
+        <h1>📊 Informe General</h1>
+        <p class="subtitulo">Análisis completo de ventas, gastos y utilidades</p>
+      </header>
 
-      <div class="form-container">
-        <form id="formInforme">
-          <label for="fechaInicio"
-            >Desde:
-            <input type="date" id="fechaInicio" required />
+      <!-- Formulario de filtros -->
+      <form id="formInforme" class="form-filtros" role="search" aria-label="Filtros de fecha para el informe">
+        <div class="grupo-fecha">
+          <label for="fechaInicio">
+            📅 Fecha de inicio:
+            <input 
+              type="date" 
+              id="fechaInicio" 
+              name="fechaInicio"
+              required 
+              aria-describedby="ayuda-fecha-inicio"
+            />
+            <small id="ayuda-fecha-inicio" class="ayuda-texto">Selecciona la fecha de inicio del período</small>
           </label>
-          <label for="fechaFin"
-            >Hasta:
-            <input type="date" id="fechaFin" required />
+        </div>
+        
+        <div class="grupo-fecha">
+          <label for="fechaFin">
+            📅 Fecha final:
+            <input 
+              type="date" 
+              id="fechaFin" 
+              name="fechaFin"
+              required 
+              aria-describedby="ayuda-fecha-fin"
+            />
+            <small id="ayuda-fecha-fin" class="ayuda-texto">Selecciona la fecha final del período</small>
           </label>
-          <label for="tipoInforme"
-            >Tipo de informe:
-            <select id="tipoInforme">
-              <option value="general">General</option>
-              <option value="producto">Ventas por Producto</option>
-              <option value="categoria">Ventas por Categoría</option>
-            </select>
-          </label>
-          <label for="filtroProducto"
-            >Filtrar por Producto:
-            <select id="filtroProducto"></select>
-          </label>
-          <label for="filtroCategoria"
-            >Filtrar por Categoría:
-            <select id="filtroCategoria"></select>
-          </label>
-          <button type="submit">Generar</button>
-        </form>
-      </div>
+        </div>
+        
+        <div class="grupo-accion">
+          <button type="submit" class="btn-generar" aria-describedby="ayuda-generar">
+            🚀 Generar Informe
+          </button>
+          <small id="ayuda-generar" class="ayuda-texto">Genera el informe para el período seleccionado</small>
+        </div>
+        
+        <div class="accesos-rapidos">
+          <span class="etiqueta-accesos">⚡ Accesos rápidos:</span>
+          <button type="button" class="btn-rapido" data-dias="7">Última semana</button>
+          <button type="button" class="btn-rapido" data-dias="30">Último mes</button>
+          <button type="button" class="btn-rapido" data-dias="90">Últimos 3 meses</button>
+        </div>
+      </form>
 
-      <div id="resultados">
-        <h3>Resumen</h3>
-        <p>Ventas: $<span id="ventasTotal">0.00</span></p>
-        <p>Gastos: $<span id="gastosTotal">0.00</span></p>
-        <p>
-          <strong>Utilidad: $<span id="utilidad">0.00</span></strong>
-        </p>
-
-        <div id="detalleInforme"></div>
-      </div>
-
-      <div id="chart-container">
-        <h3>Visualización Gráfica</h3>
-        <canvas id="grafico"></canvas>
-      </div>
-
-      <div style="margin-top: 20px">
-        <button id="btnExportarPDF">Exportar PDF</button>
-        <button id="btnExportarExcel">Exportar Excel</button>
-      </div>
+      <!-- Área de resultados -->
+      <main id="detalleInforme" class="detalle-informe" role="main" aria-live="polite">
+        <!-- Aquí se cargará dinámicamente el contenido del informe -->
+        <div class="estado-inicial">
+          <div class="icono-inicial">📈</div>
+          <h3>Listo para generar tu informe</h3>
+          <p>Selecciona un rango de fechas y haz clic en "Generar Informe" para comenzar el análisis.</p>
+          
+          <div class="caracteristicas-informe">
+            <div class="caracteristica">
+              <span class="icono-caracteristica">💰</span>
+              <span>Análisis de ventas detallado</span>
+            </div>
+            <div class="caracteristica">
+              <span class="icono-caracteristica">📊</span>
+              <span>Resumen por categorías</span>
+            </div>
+            <div class="caracteristica">
+              <span class="icono-caracteristica">📈</span>
+              <span>Cálculo de utilidades</span>
+            </div>
+            <div class="caracteristica">
+              <span class="icono-caracteristica">📄</span>
+              <span>Exportación a PDF</span>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
+  </div>
 
-    <script type="module" src="scripts/informes.js"></script>
-  </body>
+  <!-- Toast para notificaciones -->
+  <div id="toast-container" class="toast-container" aria-live="assertive"></div>
+
+  <!-- Scripts externos -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <!-- Scripts de autenticación y menú lateral -->
+  <script type="module">
+    import { auth, db } from './scripts/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+    import { cargarSidebar } from './scripts/sidebar.js';
+
+    // Verificar autenticación
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        sessionStorage.setItem('redirectUrl', window.location.pathname);
+        location.href = "login.html";
+        return;
+      }
+      
+      try {
+        const docRef = doc(db, "usuarios", user.uid);
+        const snap = await getDoc(docRef);
+        const data = snap.data();
+        const rol = data?.rol || "usuario";
+        
+        // Verificar permisos para informes
+        if (!['admin', 'contador', 'gerente'].includes(rol)) {
+          location.href = "dashboard.html";
+          return;
+        }
+        
+        await cargarSidebar(rol);
+      } catch (error) {
+        console.error('Error verificando permisos:', error);
+        mostrarToast('Error verificando permisos de usuario', 'error');
+      }
+    });
+
+    // Función para mostrar notificaciones toast
+    window.mostrarToast = function(mensaje, tipo = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${tipo}`;
+      
+      const icono = {
+        'success': '✅',
+        'error': '❌',
+        'warning': '⚠️',
+        'info': 'ℹ️'
+      }[tipo] || 'ℹ️';
+      
+      toast.innerHTML = `
+        <span class="toast-icono">${icono}</span>
+        <span class="toast-mensaje">${mensaje}</span>
+        <button class="toast-cerrar" onclick="this.parentElement.remove()">×</button>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Auto eliminar después de 5 segundos
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.remove();
+        }
+      }, 5000);
+      
+      // Animación de entrada
+      requestAnimationFrame(() => {
+        toast.style.transform = 'translateX(0)';
+        toast.style.opacity = '1';
+      });
+    };
+  </script>
+
+  <!-- Script principal del informe -->
+  <script type="module">
+    import './scripts/informes.js';
+    
+    // Configurar accesos rápidos
+    document.addEventListener('DOMContentLoaded', () => {
+      const botonesRapidos = document.querySelectorAll('.btn-rapido');
+      const fechaInicio = document.getElementById('fechaInicio');
+      const fechaFin = document.getElementById('fechaFin');
+      
+      botonesRapidos.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const dias = parseInt(btn.dataset.dias);
+          
+          const hoy = new Date();
+          const fechaAnterior = new Date();
+          fechaAnterior.setDate(hoy.getDate() - dias);
+          
+          fechaInicio.value = fechaAnterior.toISOString().split('T')[0];
+          fechaFin.value = hoy.toISOString().split('T')[0];
+          
+          // Feedback visual
+          btn.style.background = '#16a34a';
+          btn.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            btn.style.background = '';
+            btn.style.transform = '';
+          }, 200);
+          
+          mostrarToast(`Período seleccionado: ${dias} días`, 'success');
+        });
+      });
+      
+      // Validación de fechas en tiempo real
+      fechaInicio.addEventListener('change', validarRangoFechas);
+      fechaFin.addEventListener('change', validarRangoFechas);
+      
+      function validarRangoFechas() {
+        const inicio = new Date(fechaInicio.value);
+        const fin = new Date(fechaFin.value);
+        
+        if (fechaInicio.value && fechaFin.value) {
+          if (inicio > fin) {
+            mostrarToast('La fecha de inicio debe ser anterior a la fecha final', 'warning');
+            fechaInicio.style.borderColor = '#ef4444';
+            fechaFin.style.borderColor = '#ef4444';
+          } else {
+            fechaInicio.style.borderColor = '';
+            fechaFin.style.borderColor = '';
+            
+            const diferenciaDias = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+            if (diferenciaDias > 365) {
+              mostrarToast('El rango no puede ser mayor a 1 año', 'warning');
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+  <!-- Service Worker para PWA (opcional) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(console.error);
+    }
+  </script>
+</body>
 </html>

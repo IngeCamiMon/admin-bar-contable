@@ -1,16 +1,21 @@
-<!-- public/facturacion.html -->
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Facturación</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facturación</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+    }
+  </style>
+</head>
+<body>
 
+  <div class="main-content">
     <h2 class="text-center">Facturación</h2>
-    <div class="text-center"></div>
 
     <div class="form-container">
       <form id="facturaForm">
@@ -27,7 +32,29 @@
     </div>
 
     <div id="facturaPOS" style="display: none; margin-top: 20px"></div>
+  </div>
 
-    <script type="module" src="scripts/facturacion.js"></script>
-  </body>
+  <script type="module">
+    import { auth, db } from './scripts/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+    import { cargarSidebar } from './scripts/sidebar.js';
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        location.href = "login.html";
+        return;
+      }
+
+      const docRef = doc(db, "usuarios", user.uid);
+      const snap = await getDoc(docRef);
+      const data = snap.data();
+      const rol = data?.rol || "desconocido";
+
+      cargarSidebar(rol); // ✅ Cargar sidebar según el rol
+    });
+  </script>
+
+  <script type="module" src="scripts/facturacion.js"></script>
+</body>
 </html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>🛒 Detalle de Ventas - Sistema Bar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Detalle completo de ventas del bar - Análisis por día operativo">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+  <link rel="stylesheet" href="style.css" />
+  <!-- Meta tags para PWA -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+  <!-- Contenedor principal -->
+  <div class="main-content">
+    <div class="contenedor-detalle-ventas">
+      <!-- Header -->
+      <header class="header-detalle">
+        <div class="titulo-seccion">
+          <h1>🛒 Detalle de Ventas</h1>
+          <p class="subtitulo-detalle">
+            Análisis completo por día operativo del bar
+            <span class="info-horario">📅 Día operativo: 11:00 AM - 3:00 AM</span>
+          </p>
+        </div>
+        
+        <div class="navegacion-rapida">
+          <a href="informes.html" class="btn-nav">📊 Informes</a>
+          <a href="ventas.html" class="btn-nav">💰 Ventas</a>
+          <a href="dashboard.html" class="btn-nav">🏠 Dashboard</a>
+        </div>
+      </header>
+
+      <!-- Formulario de filtros -->
+      <form id="formDetalleVentas" class="form-detalle-filtros" role="search" aria-label="Filtros para detalle de ventas">
+        <div class="filtros-principales">
+          <div class="grupo-fecha">
+            <label for="fechaInicio">
+              📅 Desde:
+              <input 
+                type="date" 
+                id="fechaInicio" 
+                name="fechaInicio"
+                required 
+                aria-describedby="ayuda-fecha-inicio"
+              />
+              <small id="ayuda-fecha-inicio" class="ayuda-texto">Fecha de inicio del período</small>
+            </label>
+          </div>
+          
+          <div class="grupo-fecha">
+            <label for="fechaFin">
+              📅 Hasta:
+              <input 
+                type="date" 
+                id="fechaFin" 
+                name="fechaFin"
+                required 
+                aria-describedby="ayuda-fecha-fin"
+              />
+              <small id="ayuda-fecha-fin" class="ayuda-texto">Fecha final del período</small>
+            </label>
+          </div>
+          
+          <div class="grupo-accion">
+            <button type="submit" class="btn-cargar-detalle" aria-describedby="ayuda-cargar">
+              🔍 Cargar Detalle
+            </button>
+            <small id="ayuda-cargar" class="ayuda-texto">Buscar ventas del período</small>
+          </div>
+        </div>
+        
+        <div class="accesos-rapidos-detalle">
+          <span class="etiqueta-accesos">⚡ Períodos rápidos:</span>
+          <button type="button" class="btn-rapido" data-dias="1">Hoy</button>
+          <button type="button" class="btn-rapido" data-dias="3">Últimos 3 días</button>
+          <button type="button" class="btn-rapido" data-dias="7">Última semana</button>
+          <button type="button" class="btn-rapido" data-dias="15">Últimos 15 días</button>
+          <button type="button" class="btn-rapido" data-dias="30">Último mes</button>
+        </div>
+      </form>
+
+      <!-- Área de contenido principal -->
+      <main id="contenidoDetalleVentas" class="contenido-detalle-ventas" role="main" aria-live="polite">
+        <!-- Estado inicial -->
+        <div class="estado-inicial-detalle">
+          <div class="icono-detalle-grande">🛒</div>
+          <h3>Sistema de Detalle de Ventas</h3>
+          <p>Visualiza todas las ventas organizadas por día operativo del bar</p>
+          
+          <div class="informacion-sistema">
+            <div class="info-item">
+              <div class="info-icono">🕐</div>
+              <div class="info-contenido">
+                <strong>Horario Operativo</strong>
+                <span>Día del bar: 11:00 AM a 3:00 AM del día siguiente</span>
+              </div>
+            </div>
+            
+            <div class="info-item">
+              <div class="info-icono">📊</div>
+              <div class="info-contenido">
+                <strong>Análisis Detallado</strong>
+                <span>Cada venta con productos, horarios y métodos de pago</span>
+              </div>
+            </div>
+            
+            <div class="info-item">
+              <div class="info-icono">🔍</div>
+              <div class="info-contenido">
+                <strong>Búsqueda Avanzada</strong>
+                <span>Filtros por método de pago, productos y horarios</span>
+              </div>
+            </div>
+            
+            <div class="info-item">
+              <div class="info-icono">📄</div>
+              <div class="info-contenido">
+                <strong>Exportación</strong>
+                <span>Descarga reportes en Excel e impresión optimizada</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="instrucciones-uso">
+            <h4>📝 Cómo usar:</h4>
+            <ol class="lista-instrucciones">
+              <li>Selecciona un rango de fechas (máximo 90 días)</li>
+              <li>Haz clic en "Cargar Detalle" o usa los accesos rápidos</li>
+              <li>Navega por los días y expande para ver ventas individuales</li>
+              <li>Usa los filtros para búsquedas específicas</li>
+              <li>Exporta o imprime según necesites</li>
+            </ol>
+          </div>
+        </div>
+      </main>
+      
+      <!-- Panel de ayuda flotante -->
+      <div id="panelAyuda" class="panel-ayuda" style="display: none;">
+        <div class="ayuda-contenido">
+          <h3>💡 Ayuda - Detalle de Ventas</h3>
+          <div class="ayuda-seccion">
+            <h4>🕐 Horarios del Bar</h4>
+            <p>El día operativo del bar inicia a las <strong>11:00 AM</strong> y termina a las <strong>3:00 AM</strong> del día siguiente. Las ventas entre 12:00 AM y 3:00 AM se contabilizan en el día anterior.</p>
+          </div>
+          
+          <div class="ayuda-seccion">
+            <h4>📊 Interpretación de Datos</h4>
+            <ul>
+              <li><strong>Ventas por día:</strong> Agrupadas según horario operativo</li>
+              <li><strong>Métodos de pago:</strong> Efectivo, Nequi, Tarjeta o Mixto</li>
+              <li><strong>Productos:</strong> Detalle completo con cantidades y precios</li>
+            </ul>
+          </div>
+          
+          <div class="ayuda-seccion">
+            <h4>🔍 Filtros Disponibles</h4>
+            <ul>
+              <li><strong>Por método de pago:</strong> Filtra ventas específicas</li>
+              <li><strong>Por orden:</strong> Organiza por fecha o valor</li>
+              <li><strong>Búsqueda de texto:</strong> Encuentra productos específicos</li>
+            </ul>
+          </div>
+          
+          <button class="btn-cerrar-ayuda" onclick="toggleAyuda()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast para notificaciones -->
+  <div id="toast-container" class="toast-container" aria-live="assertive"></div>
+  
+  <!-- Botón de ayuda flotante -->
+  <button id="btnAyudaFlotante" class="btn-ayuda-flotante" onclick="toggleAyuda()" title="Ayuda">
+    ❓
+  </button>
+
+  <!-- Scripts externos -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Scripts de autenticación y menú lateral -->
+  <script type="module">
+    import { auth, db } from './scripts/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+    import { cargarSidebar } from './scripts/sidebar.js';
+
+    // Verificar autenticación y permisos
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        sessionStorage.setItem('redirectUrl', window.location.pathname);
+        location.href = "login.html";
+        return;
+      }
+      
+      try {
+        const docRef = doc(db, "usuarios", user.uid);
+        const snap = await getDoc(docRef);
+        const data = snap.data();
+        const rol = data?.rol || "usuario";
+        
+        // Verificar permisos para detalle de ventas
+        if (!['admin', 'contador', 'gerente', 'cajero'].includes(rol)) {
+          location.href = "dashboard.html";
+          return;
+        }
+        
+        await cargarSidebar(rol);
+        mostrarToast('✅ Acceso autorizado al detalle de ventas', 'success');
+      } catch (error) {
+        console.error('Error verificando permisos:', error);
+        mostrarToast('❌ Error verificando permisos de usuario', 'error');
+      }
+    });
+
+    // Sistema de notificaciones Toast
+    window.mostrarToast = function(mensaje, tipo = 'info', duracion = 5000) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${tipo}`;
+      
+      const iconos = {
+        'success': '✅',
+        'error': '❌',
+        'warning': '⚠️',
+        'info': 'ℹ️'
+      };
+      
+      toast.innerHTML = `
+        <span class="toast-icono">${iconos[tipo] || 'ℹ️'}</span>
+        <span class="toast-mensaje">${mensaje}</span>
+        <button class="toast-cerrar" onclick="this.parentElement.remove()">×</button>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Auto eliminar
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.remove();
+        }
+      }, duracion);
+      
+      // Animación de entrada
+      requestAnimationFrame(() => {
+        toast.style.transform = 'translateX(0)';
+        toast.style.opacity = '1';
+      });
+    };
+
+    // Sistema de ayuda
+    window.toggleAyuda = function() {
+      const panel = document.getElementById('panelAyuda');
+      const isVisible = panel.style.display !== 'none';
+      
+      if (isVisible) {
+        panel.style.display = 'none';
+        panel.classList.remove('show');
+      } else {
+        panel.style.display = 'block';
+        setTimeout(() => panel.classList.add('show'), 10);
+      }
+    };
+  </script>
+
+  <!-- Configuración de accesos rápidos -->
+  <script type="module">
+    document.addEventListener('DOMContentLoaded', () => {
+      const botonesRapidos = document.querySelectorAll('.btn-rapido');
+      const fechaInicio = document.getElementById('fechaInicio');
+      const fechaFin = document.getElementById('fechaFin');
+      
+      // Configurar accesos rápidos
+      botonesRapidos.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const dias = parseInt(btn.dataset.dias);
+          
+          const hoy = new Date();
+          const fechaAnterior = new Date();
+          
+          if (dias === 1) {
+            // Para "hoy", mostrar solo el día actual
+            fechaInicio.value = hoy.toISOString().split('T')[0];
+            fechaFin.value = hoy.toISOString().split('T')[0];
+          } else {
+            // Para otros períodos
+            fechaAnterior.setDate(hoy.getDate() - dias);
+            fechaInicio.value = fechaAnterior.toISOString().split('T')[0];
+            fechaFin.value = hoy.toISOString().split('T')[0];
+          }
+          
+          // Feedback visual
+          btn.style.background = '#16a34a';
+          btn.style.transform = 'scale(0.95)';
+          btn.style.color = 'white';
+          
+          setTimeout(() => {
+            btn.style.background = '';
+            btn.style.transform = '';
+            btn.style.color = '';
+          }, 300);
+          
+          const periodo = dias === 1 ? 'hoy' : `últimos ${dias} días`;
+          mostrarToast(`📅 Período seleccionado: ${periodo}`, 'success');
+        });
+      });
+      
+      // Validación de fechas en tiempo real
+      fechaInicio.addEventListener('change', validarRangoFechas);
+      fechaFin.addEventListener('change', validarRangoFechas);
+      
+      function validarRangoFechas() {
+        const inicio = new Date(fechaInicio.value);
+        const fin = new Date(fechaFin.value);
+        
+        if (fechaInicio.value && fechaFin.value) {
+          // Validar orden de fechas
+          if (inicio > fin) {
+            mostrarToast('⚠️ La fecha de inicio debe ser anterior a la fecha final', 'warning');
+            fechaInicio.classList.add('error');
+            fechaFin.classList.add('error');
+            return;
+          }
+          
+          // Validar rango máximo
+          const diferenciaDias = Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+          if (diferenciaDias > 90) {
+            mostrarToast('⚠️ El rango no puede ser mayor a 90 días', 'warning');
+            fechaInicio.classList.add('error');
+            fechaFin.classList.add('error');
+            return;
+          }
+          
+          // Fechas válidas
+          fechaInicio.classList.remove('error');
+          fechaFin.classList.remove('error');
+          fechaInicio.classList.add('success');
+          fechaFin.classList.add('success');
+          
+          if (diferenciaDias > 30) {
+            mostrarToast('ℹ️ Período extenso: la carga puede tomar más tiempo', 'info');
+          }
+        }
+      }
+      
+      // Establecer fecha por defecto (última semana)
+      const hoy = new Date();
+      const hace7Dias = new Date();
+      hace7Dias.setDate(hoy.getDate() - 7);
+      
+      fechaInicio.value = hace7Dias.toISOString().split('T')[0];
+      fechaFin.value = hoy.toISOString().split('T')[0];
+      
+      // Mostrar mensaje de bienvenida
+      setTimeout(() => {
+        mostrarToast('👋 Bienvenido al detalle de ventas. Selecciona un período para comenzar.', 'info', 7000);
+      }, 1000);
+    });
+  </script>
+
+  <!-- Script principal del detalle de ventas -->
+  <script type="module" src="scripts/detalle_ventas.js"></script>
+  
+  <!-- Atajos de teclado -->
+  <script>
+    document.addEventListener('keydown', (e) => {
+      // Ctrl + Enter para generar informe
+      if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('formDetalleVentas')?.dispatchEvent(new Event('submit'));
+      }
+      
+      // Escape para cerrar ayuda
+      if (e.key === 'Escape') {
+        const panel = document.getElementById('panelAyuda');
+        if (panel && panel.style.display !== 'none') {
+          toggleAyuda();
+        }
+      }
+      
+      // F1 para ayuda
+      if (e.key === 'F1') {
+        e.preventDefault();
+        toggleAyuda();
+      }
+    });
+  </script>
+
+  <!-- Service Worker para PWA (opcional) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(console.error);
+    }
+  </script>
+</body>
+</html> Estilos -->
+  
+  
+  <!--

@@ -1,30 +1,113 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Registro de Ventas</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Ventas</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <style>
+    .main-content { margin-left: 220px; padding: 30px; }
+    .form-container {
+      background: #fff; padding: 20px; border-radius: 10px;
+      margin-bottom: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+    }
+    label { display: block; margin-top: 10px; }
+    input, select {
+      width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 15px;
+      border: 1px solid #9a33ee; border-radius: 6px;
+    }
+    button {
+      padding: 10px 15px; background: #007bff; color: white;
+      border: none; border-radius: 6px; cursor: pointer;
+    }
+    button:hover { background: #0056b3; }
+    table {
+      width: 100%; border-collapse: collapse; margin-top: 20px;
+      background: #fff; border-radius: 8px; overflow: hidden;
+    }
+    th, td {
+      padding: 10px; border: 1px solid #ccc; text-align: left;
+    }
 
+    #btnCancelarVenta { background-color: red; color: white; margin-left: 10px; }
+
+    .modal {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.4);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 999;
+    }
+
+    /* Nuevos estilos para las mesas */
+    .mesa-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin: 6px;
+    }
+    .mesa {
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid #e50aa4;
+      background-color: #d311ed;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .mesa:hover {
+      background-color: #df0b00;
+    }
+
+    .btn {
+      font-size: 14px;
+      padding: 6px 8px;
+      background-color: #931eec;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #f337b4;
+    }
+
+    .btn-editar, .btn-eliminar {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="sidebar"></div>
+
+  <div class="main-content">
     <h2>Ventas por Mesa</h2>
     <button id="btnAgregarMesa">➕ Agregar Mesa</button>
 
-    <div id="mesasContainer" style="margin-top: 20px"></div>
+    <div id="mesasContainer" style="margin-top: 20px;"></div>
 
     <div id="detalleVenta" style="display: none; margin-top: 20px">
       <h3>Venta - Mesa <span id="mesaSeleccionada"></span></h3>
 
       <div class="form-container">
         <form id="formVenta">
+          <label for="productoSelect">Producto:</label>
           <select id="productoSelect" required></select>
+
+          <label for="cantidadProducto">Cantidad:</label>
           <input type="number" id="cantidadProducto" placeholder="Cantidad" min="1" value="1" required />
+
           <button type="submit">Agregar Producto</button>
         </form>
       </div>
 
-      <table border="1" id="tablaDetalle">
+      <table id="tablaDetalle">
         <thead>
           <tr>
             <th>Producto</th>
@@ -36,13 +119,59 @@
         <tbody></tbody>
       </table>
 
-      <p>
-        <strong>Total: $<span id="totalVenta">0.00</span></strong>
-      </p>
-      <button id="btnFinalizarVenta">Finalizar y Pagar</button>
-      <button id="btnCancelarVenta" style="background-color: red; color: white">Cancelar Venta</button>
-    </div>
+      <p><strong>Total: $<span id="totalVenta">0.00</span></strong></p>
 
-    <script type="module" src="scripts/ventas.js"></script>
-  </body>
+      <div class="form-container">
+        <h4>Método de Pago (puede dividir montos)</h4>
+
+        <label for="pagoEfectivo">Pago en Efectivo:</label>
+        <input type="number" id="pagoEfectivo" min="0" value="0" />
+
+        <label for="pagoNequi">Pago por Nequi:</label>
+        <input type="number" id="pagoNequi" min="0" value="0" />
+
+        <label for="pagoTarjeta">Pago con Tarjeta:</label>
+        <input type="number" id="pagoTarjeta" min="0" value="0" />
+      </div>
+
+      <button id="btnFinalizarVenta">Finalizar y Pagar</button>
+      <button id="btnCancelarVenta">Cancelar Venta</button>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR PRODUCTO -->
+  <div id="modalEditarProducto" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 400px; margin: auto; padding: 20px; background: white; border-radius: 8px;">
+      <h3>Editar Producto</h3>
+      <label for="editarCantidad">Cantidad:</label>
+      <input type="number" id="editarCantidad" min="1" />
+
+      <label for="editarPrecio">Precio unitario:</label>
+      <input type="number" id="editarPrecio" min="0" />
+
+      <div style="margin-top: 15px; text-align: right;">
+        <button id="guardarCambiosBtn">Guardar</button>
+        <button onclick="cerrarModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './scripts/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+    import { cargarSidebar } from './scripts/sidebar.js';
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) location.href = "login.html";
+      const snap = await getDoc(doc(db, "usuarios", user.uid));
+      cargarSidebar(snap.data()?.rol || "desconocido");
+    });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script type="module" src="scripts/ventas.js"></script>
+
+</body>
 </html>

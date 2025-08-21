@@ -4,35 +4,101 @@
   <meta charset="UTF-8" />
   <title>Caja y Cierre Diario</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+    }
+    table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    .alerta {
+      background: #ffe5e5;
+      border: 1px solid #ff0000;
+      color: #900;
+      padding: 10px;
+      margin-top: 20px;
+    }
+    .fecha-selector {
+      margin: 15px 0;
+    }
+  </style>
 </head>
 <body>
-  <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
-  <h2>Cierre de Caja Diario</h2>
-  
 
+  <div class="main-content">
+    <h2>Cierre de Caja Diario</h2>
 
-  <button id="btnCalcular">Calcular Totales de Hoy</button>
+    <div class="fecha-selector">
+      <label for="fechaSeleccionada">Seleccionar fecha para cierre:</label>
+      <input type="date" id="fechaSeleccionada" />
+    </div>
 
-  <div id="resumen" style="margin-top: 20px;">
-    <p>Ventas del día: $<span id="ventasDia">0.00</span></p>
-    <p>Gastos del día: $<span id="gastosDia">0.00</span></p>
-    <p><strong>Total Neto: $<span id="totalNeto">0.00</span></strong></p>
+    <button id="btnCalcular">Calcular Totales del Turno</button>
+
+    <div id="resumen" style="margin-top: 20px;">
+      <p>Ventas del turno: $<span id="ventasDia">0.00</span></p>
+      <ul>
+        <li>Efectivo: $<span id="ventasEfectivo">0.00</span></li>
+        <li>Nequi: $<span id="ventasNequi">0.00</span></li>
+        <li>Tarjeta: $<span id="ventasTarjeta">0.00</span></li>
+      </ul>
+      <p>Gastos del turno: $<span id="gastosDia">0.00</span></p>
+      <p><strong>Total Neto: $<span id="totalNeto">0.00</span></strong></p>
+    </div>
+
+    <h3>Registrar ingreso o egreso manual</h3>
+    <form id="formMovimiento">
+      <input type="text" id="concepto" placeholder="Concepto" required />
+      <input type="number" id="monto" placeholder="Monto" step="0.01" required />
+      <select id="tipo" required>
+        <option value="ingreso">Ingreso</option>
+        <option value="egreso">Egreso</option>
+      </select>
+      <button type="submit">Registrar</button>
+    </form>
+
+    <h3>Cierre del Turno</h3>
+    <button id="btnCerrarCaja">Cerrar Caja</button>
+
+    <div id="alertaFaltantes"></div>
+
+    <h3 style="margin-top: 40px;">Historial de Cierres</h3>
+    <table id="tablaCierres">
+      <thead>
+        <tr>
+          <th>Fecha Registro</th>
+          <th>Desde</th>
+          <th>Hasta</th>
+          <th>Ventas</th>
+          <th>Efectivo</th>
+          <th>Nequi</th>
+          <th>Tarjeta</th>
+          <th>Ingresos Manuales</th>
+          <th>Egresos Manuales</th>
+          <th>Gastos</th>
+          <th>Total Neto</th>
+        </tr>
+      </thead>
+      <tbody id="tablaCierresBody"></tbody>
+    </table>
   </div>
 
-  <h3>Registrar ingreso o egreso manual</h3>
-  <form id="formMovimiento">
-    <input type="text" id="concepto" placeholder="Concepto" required />
-    <input type="number" id="monto" placeholder="Monto" step="0.01" required />
-    <select id="tipo" required>
-      <option value="ingreso">Ingreso</option>
-      <option value="egreso">Egreso</option>
-    </select>
-    <button type="submit">Registrar</button>
-  </form>
-
-  <h3>Cierre del Día</h3>
-  <button id="btnCerrarCaja">Cerrar Caja</button>
-
+  <!-- Scripts -->
+  <script type="module">
+    import { cargarSidebar } from './scripts/sidebar.js';
+    cargarSidebar('admin');
+  </script>
   <script type="module" src="scripts/caja.js"></script>
 </body>
 </html>

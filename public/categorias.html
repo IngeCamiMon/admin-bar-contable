@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Categorías</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-content">
+    <h2>Gestión de Categorías</h2>
+
+    <div class="form-container">
+      <form id="formCategoria">
+        <label for="nombreCategoria">Nombre de la categoría:</label>
+        <input type="text" id="nombreCategoria" placeholder="Ej: Bebidas" required />
+        <button type="submit">Guardar Categoría</button>
+      </form>
+    </div>
+
+    <h3>Categorías Registradas</h3>
+    <table border="1" id="tablaCategorias">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script type="module">
+    import { cargarSidebar } from './scripts/sidebar.js';
+    cargarSidebar('admin'); // Cambia 'admin' por el rol real si es dinámico
+  </script>
+  <script type="module" src="scripts/categorias.js"></script>
+</body>
+</html>

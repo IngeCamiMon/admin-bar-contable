@@ -1,23 +1,67 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Gastos Operativos</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gastos Operativos</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+    }
 
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .close {
+      float: right;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .acciones {
+      display: flex;
+      gap: 10px;
+    }
+
+    .acciones button {
+      padding: 5px 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-content">
     <h2 class="text-center">Registro de Gastos</h2>
-    <div class="text-center"></div>
 
     <div class="form-container">
       <form id="formGasto">
         <label for="descripcion">Descripción</label>
-        <input type="text" id="descripcion" placeholder="Descripción" required />
+        <input type="text" id="descripcion" required />
 
         <label for="valor">Valor</label>
-        <input type="number" id="valor" placeholder="Valor" min="0" step="0.01" required />
+        <input type="number" id="valor" min="0" step="0.01" required />
 
         <label for="fecha">Fecha</label>
         <input type="date" id="fecha" required />
@@ -44,12 +88,62 @@
             <th>Descripción</th>
             <th>Categoría</th>
             <th>Valor</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
+  </div>
 
-    <script type="module" src="scripts/gastos.js"></script>
-  </body>
+  <!-- Modal para editar -->
+  <div class="modal" id="modalEditar">
+    <div class="modal-content">
+      <span class="close" id="cerrarModal">&times;</span>
+      <h3>Editar Gasto</h3>
+      <form id="formEditar">
+        <input type="hidden" id="idEditar">
+        <label for="descripcionEditar">Descripción</label>
+        <input type="text" id="descripcionEditar" required>
+
+        <label for="valorEditar">Valor</label>
+        <input type="number" id="valorEditar" min="0" step="0.01" required>
+
+        <label for="fechaEditar">Fecha</label>
+        <input type="date" id="fechaEditar" required>
+
+        <label for="categoriaEditar">Categoría</label>
+        <select id="categoriaEditar" required>
+          <option value="Compras">Compras</option>
+          <option value="Servicios">Servicios</option>
+          <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Otros">Otros</option>
+        </select>
+
+        <button type="submit">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from './scripts/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
+    import { cargarSidebar } from './scripts/sidebar.js';
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        location.href = "login.html";
+        return;
+      }
+
+      const docRef = doc(db, "usuarios", user.uid);
+      const snap = await getDoc(docRef);
+      const data = snap.data();
+      cargarSidebar(data?.rol || "desconocido");
+    });
+  </script>
+
+  <script type="module" src="scripts/gastos.js"></script>
+</body>
 </html>

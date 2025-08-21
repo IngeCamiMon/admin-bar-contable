@@ -3,38 +3,239 @@
   <head>
     <meta charset="UTF-8" />
     <title>Inventario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <style>
+      .main-content {
+        margin-left: 220px;
+        padding: 30px;
+      }
+      .form-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin-bottom: 30px;
+      }
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ccc;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      .modal-content {
+        background-color: #fff;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .modal-content h3 {
+        margin-top: 0;
+      }
+      .modal-content input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+      .modal-close {
+        float: right;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    <button onclick="location.href='dashboard.html'" class="btn-volver">← Volver al Inicio</button>
+    <div class="main-content">
+      <div class="form-container">
+        <form id="formProducto">
+          <label>Nombre:</label>
+          <input type="text" id="nombre" required />
 
-    <h2>Gestión de Inventario</h2>
+          <label>Categoría:</label>
+          <select id="categoria" required></select>
 
-    <div class="form-container">
-      <form id="formProducto">
-        <input type="text" id="nombre" placeholder="Nombre del producto" required />
-        <input type="text" id="categoria" placeholder="Categoría" required />
-        <input type="number" id="cantidad" placeholder="Cantidad" min="0" required />
-        <input type="number" id="precioCosto" placeholder="Precio costo" min="0" step="0.01" required />
-        <input type="number" id="precioVenta" placeholder="Precio venta" min="0" step="0.01" required />
-        <button type="submit">Guardar producto</button>
-      </form>
+          <label>Cantidad:</label>
+          <input type="number" id="cantidad" required min="0" />
+
+          <label>Precio Costo:</label>
+          <input type="number" id="precioCosto" required min="0" step="0.01" />
+
+          <label>Precio Venta:</label>
+          <input type="number" id="precioVenta" required min="0" step="0.01" />
+
+          <button type="submit">Guardar Producto</button>
+        </form>
+      </div>
+
+      <div>
+        <label>Filtrar por categoría:</label>
+        <select id="filtroCategoria"></select>
+
+        <label>Buscar producto:</label>
+        <input type="text" id="filtroProducto" placeholder="Nombre..." />
+      </div>
+
+      <table id="tablaInventario">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+            <th>Precio Costo</th>
+            <th>Precio Venta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
 
-    <h3>Productos actuales</h3>
-    <table border="1" id="tablaInventario">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Categoría</th>
-          <th>Cantidad</th>
-          <th>Precio Venta</th>
-          <th>Alertas</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <!-- MODAL AGREGAR STOCK -->
+    <div id="modalAgregarStock" class="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="cerrarModal()">&times;</span>
+        <h3>Agregar al inventario</h3>
+        <input type="number" id="cantidadAgregar" placeholder="Cantidad a agregar" min="1" />
+        <button onclick="confirmarAgregarStock()">✅ Agregar</button>
+      </div>
+    </div>
+
+    <!-- MODAL EDITAR PRODUCTO -->
+    <div id="modalEditarProducto" class="modal">
+      <div class="modal-content">
+        <span class="modal-close" onclick="cerrarModalEditar()">&times;</span>
+        <h3>Editar producto</h3>
+
+        <label>Nombre:</label>
+        <input type="text" id="editarNombre" />
+
+        <label>Categoría:</label>
+        <select id="editarCategoria"></select>
+
+        <label>Cantidad:</label>
+        <input type="number" id="editarCantidad" min="0" />
+
+        <label>Precio Costo:</label>
+        <input type="number" id="editarPrecioCosto" min="0" step="0.01" />
+
+        <label>Precio Venta:</label>
+        <input type="number" id="editarPrecioVenta" min="0" step="0.01" />
+
+        <button onclick="confirmarEdicionProducto()">✅ Guardar cambios</button>
+      </div>
+    </div>
+
+    <script type="module">
+      import { auth, db } from "./scripts/firebase-config.js";
+      import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+      import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+      import { cargarSidebar } from "./scripts/sidebar.js";
+
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          location.href = "login.html";
+          return;
+        }
+
+        const docRef = doc(db, "usuarios", user.uid);
+        const snap = await getDoc(docRef);
+        const data = snap.data();
+        const rol = data?.rol || "desconocido";
+
+        cargarSidebar(rol);
+      });
+    </script>
 
     <script type="module" src="scripts/inventario.js"></script>
+
+    <script>
+      let productoIdAgregar = "";
+      let cantidadActual = 0;
+
+      window.agregarStock = function (id, cantidad) {
+        productoIdAgregar = id;
+        cantidadActual = cantidad;
+        document.getElementById("cantidadAgregar").value = "";
+        document.getElementById("modalAgregarStock").style.display = "block";
+      };
+
+      window.cerrarModal = function () {
+        document.getElementById("modalAgregarStock").style.display = "none";
+      };
+
+      window.confirmarAgregarStock = async function () {
+        const cantidad = parseInt(document.getElementById("cantidadAgregar").value);
+        if (isNaN(cantidad) || cantidad <= 0) {
+          alert("Ingrese una cantidad válida");
+          return;
+        }
+
+        const { db } = await import("./scripts/firebase-config.js");
+        const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js");
+        const ref = doc(db, "productos", productoIdAgregar);
+        await updateDoc(ref, { cantidad: cantidadActual + cantidad });
+
+        cerrarModal();
+        alert("Inventario actualizado correctamente");
+        location.reload();
+      };
+
+      window.onclick = function (event) {
+        const modal = document.getElementById("modalAgregarStock");
+        if (event.target === modal) {
+          cerrarModal();
+        }
+      };
+    </script>
   </body>
 </html>

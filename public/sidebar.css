@@ -1,0 +1,123 @@
+/* === SIDEBAR ESTILO LA WAPPA === */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 230px;
+  background: linear-gradient(180deg, #12d4e9, #eb21b2);
+  color: white;
+  padding-top: 70px;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+.sidebar h2,
+#nombar {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #ffd54f;
+  font-family: 'Segoe UI', cursive;
+  letter-spacing: 1px;
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar ul li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+}
+
+.sidebar ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  width: 100%;
+}
+
+.sidebar ul li a.active {
+  background-color: #ff4081;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(255, 64, 129, 0.4);
+}
+
+/* === BOTÓN DE LOGOUT / ACCIÓN === */
+#logout {
+  margin-top: 30px;
+  background-color: #e91e63;
+  color: white;
+  text-align: center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+#logout:hover {
+  background-color: #c2185b;
+  transform: scale(1.05);
+}
+
+/* === CONTENIDO PRINCIPAL === */
+.content {
+  margin-left: 230px;
+  padding: 25px;
+  transition: margin-left 0.3s ease;
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 768px) {
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding-top: 20px;
+    box-shadow: none;
+  }
+
+  .content {
+    margin-left: 0;
+    padding: 20px;
+  }
+
+  .sidebar ul li {
+    justify-content: center;
+  }
+
+  #logout {
+    margin: 20px auto 0;
+    display: block;
+    width: 80%;
+  }
+}
+
+/* === TRANSICIONES Y DETALLES === */
+.sidebar ul li i {
+  font-size: 18px;
+}
+
+.sidebar ul li:hover i {
+  transform: scale(1.1);
+  transition: transform 0.2s;
+}
